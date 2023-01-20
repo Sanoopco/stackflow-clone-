@@ -1,0 +1,55 @@
+{% extends 'base.html' %} {% block body_block %}
+
+<div class="container">
+  
+  {% for qs in myqs %}
+  <div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+      <div class="card mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+      <div class="col-md-4">
+        {% if qs.images %}
+        <img src="{{qs.images.url}}" class="img-fluid rounded-start" alt="...">
+        {% endif %}
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">question</h5>
+          <p class="card-text">{{ qs.question }}</p>
+          <p class="card-text"><small class="text-muted">{{qs.qs_created_date}}</small></p>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <p>
+        <button class="btn btn-primary d-block mx-auto" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+          show answers
+        </button>
+      </p>
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+          <ul class="list-group">
+            {% for ans in qs.fetch_answers %}
+            <a href="{% url 'voteup' ans.id%}">upvote</a>            
+            {% comment %} {% if ans.up_vote.all %} {% endcomment %}
+            <P>{{ ans.up_vote.count }}</P>
+            {% comment %} {% endif %} {% endcomment %}
+            
+            <li class="list-group-item" style="background-color:rgba(216, 199, 48, 0.526);">
+              {{ans.answer}}
+              <p>posted by {{ans.user}} on {{ans.ans_created_date}}</p>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+    </div>
+    <div class="col-3"></div>
+  </div>
+  
+{% endfor %}
+</div>
+{% endblock %}

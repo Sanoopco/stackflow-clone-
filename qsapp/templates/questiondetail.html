@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block body_block %}
+<div class="container">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <div class="card" style="width: 18rem;">
+                {% if question.images %}
+                <img src="{{question.images.url}}" class="card-img-top" alt="...">
+                {% endif %}
+                <div class="card-body">
+                  <div class="small text-muted">{{question.qs_created_date}}</div>
+                  <h5 class="card-title">{{question.question}}</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <form action="{% url 'answeradd' question.id%}" method="post">
+                    {% csrf_token %}
+                    {{form.as_p}} 
+                    </textarea>
+                    <input type="submit" value="add answer" class="btn btn-primary d-block mx-auto">
+                  </form>
+                </div>
+                <p>
+                  <a class="btn btn-primary form-control togglebtn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    View answers
+                  </a>
+                </p>
+                <div class="collapse" id="collapseExample">
+                  <div class="card card-body">
+                    <ul class="list-group">
+                      {% for ans in question.fetch_answers %}
+                      <a href="{% url 'voteup' ans.id%}">upvote</a>
+                      {% if ans.user == request.user %}
+                        <a href="{% url 'remove-ans' ans.id%}">delete</a>
+                      {% endif %}
+                      
+                      {% comment %} {% if ans.up_vote.all %} {% endcomment %}
+                      <P>{{ ans.up_vote.count }}</P>
+                      {% comment %} {% endif %} {% endcomment %}
+                      
+                      <li class="list-group-item" style="background-color:rgba(216, 199, 48, 0.526);">
+                        {{ans.answer}}
+                        <p>posted by {{ans.user}} on {{ans.ans_created_date}}</p>
+                      </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4"></div>
+    </div>
+</div>
+{%endblock%}
